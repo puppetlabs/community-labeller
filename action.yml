@@ -1,0 +1,25 @@
+name: 'community-labeler'
+description: 'A GitHub action to label issues and pull requests with a community label'
+author: 'puppetlabs'
+inputs:
+  label_name:
+    description: 'The name of the label'
+    default: 'community'
+    required: false
+  label_color:
+    description: 'The color of the label'
+    default: '5319E7'
+    required: false
+  org_membership:
+    description: 'Contributions from users that are not members of the specified organisations will be labeled with the configured label. The value can be a single organisation or a comma-separated list of organisations.'
+    default: 'puppetlabs'
+    required: false
+  logins_to_ignore:
+    description: 'Contributions from the specified users will not be labeled by this action. The value can be a single login or a comma-separated list of logins.'
+    required: false
+  token:
+    description: 'The GitHub token to use for authentication.'
+    required: true
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
