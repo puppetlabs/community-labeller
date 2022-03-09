@@ -140,7 +140,7 @@ export class GitHubClient {
 
   // Checks if the user is one that should be ignored
   isExcludedLogin(logins: string): boolean {
-    const defaultLogins = ['github-actions', 'dependabot']
+    const defaultLogins = ['github-actions[bot]', 'dependabot[bot]']
     const providedLogins = logins.split(',')
     const allLogins = [...new Set([...defaultLogins, ...providedLogins])]
     if (allLogins.includes(this.payload.sender.login)) {
