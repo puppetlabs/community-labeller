@@ -1,6 +1,10 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {IssuesEvent, PullRequestEvent} from '@octokit/webhooks-types/schema'
+import {
+  IssuesEvent,
+  Label,
+  PullRequestEvent
+} from '@octokit/webhooks-types/schema'
 import {GitHub} from '@actions/github/lib/utils'
 import {RequestError} from '@octokit/request-error'
 
@@ -31,10 +35,12 @@ this action is executed. */
 export class GitHubClient {
   private readonly client: InstanceType<typeof GitHub>
   private readonly payload: PullRequestEvent | IssuesEvent
+  //private readonly senderLogin: string
 
   constructor(token: string) {
     this.client = github.getOctokit(token)
-    this.payload = this.getPayload()
+    this.payload = this.getPayload() //github.context.payload
+    //this.senderLogin = this.payload.sender!.login
   }
 
   // Gets the payload of the current event
@@ -73,6 +79,22 @@ export class GitHubClient {
     }
   }
 
+  // Checks if the issue already has the label
+  hasLabel(name: string): boolean {
+    let labels!: Label[]
+
+    if (github.context.eventName === 'issues') {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      labels = (this.payload as IssuesEvent).issue.labels!
+    } else if (github.context.eventName === 'pull_request') {
+      labels = (this.payload as PullRequestEvent).pull_request.labels
+    } else {
+      false
+    }
+
+    return labels.some((l) => l.name === name)
+  }
+
   /* Adds the label to the issue/pull request. It will attempt to create the label
   if it does not exist. */
   async addLabel(name: string): Promise<void> {
@@ -92,13 +114,11 @@ export class GitHubClient {
   async checkOrgMembership(orgs: string[]): Promise<boolean> {
     const membership: Record<string, boolean> = {} // Maybe this could be an array? Does it matter?
 
-    const user = this.payload.sender.login
-
     for (const org of orgs) {
       try {
         await this.client.rest.orgs.checkMembershipForUser({
           org,
-          username: user
+          username: this.payload.sender.login
         })
 
         membership[org] = true

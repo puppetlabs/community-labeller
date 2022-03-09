@@ -15,6 +15,11 @@ export async function run(): Promise<void> {
 
     const client = new GitHubClient(token)
 
+    if (client.hasLabel(labelName)) {
+      core.info(`The '${labelName}' label is already present on this issue! 🙌`)
+      return
+    }
+
     if (
       !(await client.checkOrgMembership(orgs)) &&
       !client.isExcludedLogin(loginsToIgnore)

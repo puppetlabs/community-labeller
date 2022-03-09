@@ -28,6 +28,18 @@ describe('With a new github client', () => {
           action: 'opened',
           sender: {
             login: 'dependabot'
+          },
+          issue: {
+            labels: [
+              {
+                id: 1362934389,
+                node_id: 'MDU6TGFiZWwxMzYyOTM0Mzg5',
+                url: 'https://api.github.com/repos/Codertocat/Hello-World/labels/bug',
+                name: 'community',
+                color: 'd73a4a',
+                default: true
+              }
+            ]
           }
         }
       }
@@ -36,7 +48,6 @@ describe('With a new github client', () => {
     client = new GitHubClient('1234')
     console.log('::stop-commands::stoptoken')
     process.stdout.write = jest.fn()
-
   })
 
   beforeEach(() => {
@@ -55,9 +66,7 @@ describe('With a new github client', () => {
   }, 100000)
 
   test('checkOrgMembership should return true when the user is a member of the org', async () => {
-    nock(apiUrl)
-    .get('/orgs/test/members/dependabot')
-    .reply(200, {})
+    nock(apiUrl).get('/orgs/test/members/dependabot').reply(200, {})
 
     const result = await client.checkOrgMembership(['test'])
     expect(result).toBe(true)
@@ -65,8 +74,8 @@ describe('With a new github client', () => {
 
   test('checkOrgMembership should return false when the user is not a member of the org', async () => {
     nock(apiUrl)
-    .get('/orgs/test/members/dependabot')
-    .reply(404, {message: 'User does not exist'})
+      .get('/orgs/test/members/dependabot')
+      .reply(404, {message: 'User does not exist'})
 
     const result = await client.checkOrgMembership(['test'])
     expect(result).toBe(false)
@@ -75,9 +84,12 @@ describe('With a new github client', () => {
   test('checkOrgMembership should handle a list of orgs', async () => {
     const orgs = ['test', 'test2', 'test3']
     nock(apiUrl)
-    .get(`/orgs/test/members/dependabot`).reply(200, {})
-    .get(`/orgs/test2/members/dependabot`).reply(200, {})
-    .get(`/orgs/test3/members/dependabot`).reply(200, {})
+      .get(`/orgs/test/members/dependabot`)
+      .reply(200, {})
+      .get(`/orgs/test2/members/dependabot`)
+      .reply(200, {})
+      .get(`/orgs/test3/members/dependabot`)
+      .reply(200, {})
 
     const result = await client.checkOrgMembership(orgs)
     expect(result).toBe(true)
@@ -102,11 +114,11 @@ describe('With a new github client', () => {
 
   test('createLabel should create a label', async () => {
     nock(apiUrl)
-    .post('/repos/puppetlabs/iac/labels', {
-      name: 'test',
-      color: 'ffffff'
-    })
-    .reply(200, {})
+      .post('/repos/puppetlabs/iac/labels', {
+        name: 'test',
+        color: 'ffffff'
+      })
+      .reply(200, {})
 
     await client.createLabel('test', 'ffffff')
     assertInOutput(`Successfully created the 'test' label ✨${os.EOL}`, 1)
@@ -114,34 +126,52 @@ describe('With a new github client', () => {
 
   test('createlabel should not create a label if it already exists', async () => {
     nock(apiUrl)
-    .post('/repos/puppetlabs/iac/labels', {
-      name: 'test',
-      color: 'ffffff'
-    })
-    .reply(422, {
-      message: 'Validation Failed',
-      errors: [{
-        resource: 'Label',
-        field: 'name',
-        code: 'already_exists'
-      }]
-    })
+      .post('/repos/puppetlabs/iac/labels', {
+        name: 'test',
+        color: 'ffffff'
+      })
+      .reply(422, {
+        message: 'Validation Failed',
+        errors: [
+          {
+            resource: 'Label',
+            field: 'name',
+            code: 'already_exists'
+          }
+        ]
+      })
 
     await client.createLabel('test', 'ffffff')
-    assertInOutput(`It looks like the label 'test' already exists in this repository so we don't need to create it! 🙌${os.EOL}`, 1)
+    assertInOutput(
+      `It looks like the label 'test' already exists in this repository so we don't need to create it! 🙌${os.EOL}`,
+      1
+    )
   })
 
   test('addLabel should add a label to an issue', async () => {
     nock(apiUrl)
-    .post('/repos/puppetlabs/iac/issues/331/labels', {labels: ['test']} ).reply(200, {})
+      .post('/repos/puppetlabs/iac/issues/331/labels', {labels: ['test']})
+      .reply(200, {})
 
     await client.addLabel('test')
-    assertInOutput(`Successfully added the 'test' label to issue 331 ✨${os.EOL}`, 1)
+    assertInOutput(
+      `Successfully added the 'test' label to issue 331 ✨${os.EOL}`,
+      1
+    )
+  })
+
+  test('hasLabel returns true if the label already exists on the issue or pr', () => {
+    const result = client.hasLabel('community')
+    expect(result).toBe(true)
+  })
+
+  test('hasLabel returns false if the label does not exist on the issue or pr', () => {
+    const result = client.hasLabel('test')
+    expect(result).toBe(false)
   })
 })
 
 describe('With an invalid event in the payload', () => {
-
   beforeAll(() => {
     Object.defineProperty(github, 'context', {
       value: {
