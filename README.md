@@ -19,7 +19,7 @@ This action requires a token with `read:org`. The standard GITHUB_TOKEN will not
 ## Usage
 
 ``` yaml
-name: community_labeler
+name: community-labeler
 
 on:
   issues:
@@ -30,16 +30,17 @@ on:
       - opened
 
 jobs:
-  build:
+  label:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: chelnak/community-labeler@v0
+      - uses: puppetlabs/community-labeler@v0
+        name: Label issues or pull requests
         with:
           label_name: community
-          label_color: 5319E7
+          label_color: '5319e7'
           org_membership: puppetlabs
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CUSTOM_TOKEN }}
 ```
 
 ## Contributing
