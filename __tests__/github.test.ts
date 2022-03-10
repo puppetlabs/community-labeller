@@ -27,7 +27,7 @@ describe('With a new github client', () => {
         payload: {
           action: 'opened',
           sender: {
-            login: 'dependabot'
+            login: 'dependabot[bot]'
           },
           issue: {
             labels: [
@@ -66,7 +66,7 @@ describe('With a new github client', () => {
   }, 100000)
 
   test('checkOrgMembership should return true when the user is a member of the org', async () => {
-    nock(apiUrl).get('/orgs/test/members/dependabot').reply(200, {})
+    nock(apiUrl).get('/orgs/test/members/dependabot%5Bbot%5D').reply(200, {})
 
     const result = await client.checkOrgMembership(['test'])
     expect(result).toBe(true)
@@ -74,7 +74,7 @@ describe('With a new github client', () => {
 
   test('checkOrgMembership should return false when the user is not a member of the org', async () => {
     nock(apiUrl)
-      .get('/orgs/test/members/dependabot')
+      .get('/orgs/test/members/dependabot%5Bbot%5D')
       .reply(404, {message: 'User does not exist'})
 
     const result = await client.checkOrgMembership(['test'])
@@ -84,11 +84,11 @@ describe('With a new github client', () => {
   test('checkOrgMembership should handle a list of orgs', async () => {
     const orgs = ['test', 'test2', 'test3']
     nock(apiUrl)
-      .get(`/orgs/test/members/dependabot`)
+      .get(`/orgs/test/members/dependabot%5Bbot%5D`)
       .reply(200, {})
-      .get(`/orgs/test2/members/dependabot`)
+      .get(`/orgs/test2/members/dependabot%5Bbot%5D`)
       .reply(200, {})
-      .get(`/orgs/test3/members/dependabot`)
+      .get(`/orgs/test3/members/dependabot%5Bbot%5D`)
       .reply(200, {})
 
     const result = await client.checkOrgMembership(orgs)
