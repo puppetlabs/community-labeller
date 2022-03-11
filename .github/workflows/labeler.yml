@@ -6,11 +6,9 @@ on:
   issues:
     types:
       - opened
-      - reopened # temporary while in development
   pull_request:
     types:
       - opened
-      - reopened # temporary while in development
 
 jobs:
   build:
