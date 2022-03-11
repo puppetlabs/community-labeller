@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "A GitHub action to label issues and pull requests with a community label",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npx ncc build ./src/main.ts",
     "test": "jest",
