@@ -1,5 +1,5 @@
 {
-  "name": "community-labeler",
+  "name": "community-labeller",
   "version": "0.1.0",
   "private": true,
   "description": "A GitHub action to label issues and pull requests with a community label",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/puppetlabs/community-labeler.git"
+    "url": "git+https://github.com/puppetlabs/community-labeller.git"
   },
   "keywords": [
     "actions",

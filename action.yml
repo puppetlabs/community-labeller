@@ -1,4 +1,4 @@
-name: 'community-labeler'
+name: 'community-labeller'
 description: 'A GitHub action to label issues and pull requests with a community label'
 author: 'puppetlabs'
 inputs:

@@ -1,4 +1,4 @@
-# community-labeler
+# community-labeller
 
 This is a basic action that will label issues and pull request with a given label if the contributor is not a member of a given list of organisations.
 
@@ -19,7 +19,7 @@ This action requires a token with `read:org`. The standard GITHUB_TOKEN will not
 ## Usage
 
 ``` yaml
-name: community-labeler
+name: community-labeller
 
 on:
   issues:
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: puppetlabs/community-labeler@v0
+      - uses: puppetlabs/community-labeller@v0
         name: Label issues or pull requests
         with:
           label_name: community
