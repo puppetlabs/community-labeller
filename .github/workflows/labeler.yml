@@ -1,6 +1,6 @@
 
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: community-labeler
+name: community-labeller
 
 on:
   issues:
@@ -15,7 +15,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: puppetlabs/community-labeler@v0
+      - uses: puppetlabs/community-labeller@v0
         name: Label issue or pull request
         with:
           label_name: community
