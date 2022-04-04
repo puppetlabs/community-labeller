@@ -14,7 +14,13 @@ This is a basic action that will label issues and pull request with a given labe
 
 ## Security
 
+### Scopes
+
 This action requires a token with `read:org`. The standard GITHUB_TOKEN will not work.
+
+### Workflow events
+
+The labeller needs to access the secret associated with the repository. To enable this safely for both internal and external contributors, we reccoment using the `pull_request_target` event for pull requests.
 
 ## Usage
 
@@ -25,7 +31,7 @@ on:
   issues:
     types:
       - opened
-  pull_request:
+  pull_request_target:
     types:
       - opened
 
