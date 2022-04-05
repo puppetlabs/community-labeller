@@ -47,7 +47,10 @@ export class GitHubClient {
   private getPayload(): PullRequestEvent | IssuesEvent {
     if (github.context.eventName === 'issues') {
       return github.context.payload as IssuesEvent
-    } else if (github.context.eventName === 'pull_request') {
+    } else if (
+      github.context.eventName === 'pull_request' ||
+      github.context.eventName === 'pull_request_target'
+    ) {
       return github.context.payload as PullRequestEvent
     } else {
       throw new Error(
