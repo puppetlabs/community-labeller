@@ -89,10 +89,13 @@ export class GitHubClient {
     if (github.context.eventName === 'issues') {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       labels = (this.payload as IssuesEvent).issue.labels!
-    } else if (github.context.eventName === 'pull_request') {
+    } else if (
+      github.context.eventName === 'pull_request' ||
+      github.context.eventName === 'pull_request_target'
+    ) {
       labels = (this.payload as PullRequestEvent).pull_request.labels
     } else {
-      false
+      return false
     }
 
     return labels.some((l) => l.name === name)
