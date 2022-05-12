@@ -23,12 +23,17 @@ We need this when running locally. */
 //     payload: {
 //       action: 'opened',
 //       sender: {
-//         login: 'dependabot'
+//         login: 'petergmurphy'
+//       },
+//       pull_request: {
+//         labels: []
+//       },
+//       issue: {
+//         labels: []
 //       }
 //     }
 //   }
 // })
-
 /* This class wraps the octokit client and provides convenience methods for
 working with the GitHub API and the current context of the workflow where
 this action is executed. */
@@ -118,30 +123,30 @@ export class GitHubClient {
 
   // Checks if the event sender is a member of the specified org(s)
   async checkOrgMembership(orgs: string[]): Promise<boolean> {
-    const membership: Record<string, boolean> = {} // Maybe this could be an array? Does it matter?
+    const username: string = this.payload.sender.login
 
     for (const org of orgs) {
       try {
         await this.client.rest.orgs.checkMembershipForUser({
           org,
-          username: this.payload.sender.login
+          username
         })
 
-        membership[org] = true
+        return true
       } catch (error) {
         const requestError = error as RequestError
         if (
           requestError.status === 404 &&
           requestError.message.includes('User does not exist')
         ) {
-          return false
+          core.debug(`User: ${username}, is not a member of the ${org} org`)
         } else {
           throw error
         }
       }
     }
 
-    return Object.keys(membership).length > 0
+    return false
   }
 
   // Checks if the user is one that should be ignored
