@@ -6,6 +6,7 @@ see if they are a member of the X organisations and Y teams. If they are not we 
 label the issue with the label `community`. */
 export async function run(): Promise<void> {
   try {
+    core.info('Starting community labeller')
     // Retrieve our inputs
     const labelName = core.getInput('label_name', {required: true})
     const labelColor = core.getInput('label_color', {required: true})
@@ -21,12 +22,15 @@ export async function run(): Promise<void> {
     }
 
     if (
-      !(await client.checkOrgMembership(orgs)) &&
-      !client.isExcludedLogin(loginsToIgnore)
+      (await client.checkOrgMembership(orgs)) ||
+      client.isExcludedLogin(loginsToIgnore)
     ) {
-      await client.createLabel(labelName, labelColor)
-      await client.addLabel(labelName)
+      core.info("Looks like this issue doesn't need labeling! 👍")
+      return
     }
+
+    await client.createLabel(labelName, labelColor)
+    await client.addLabel(labelName)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
