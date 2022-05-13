@@ -1,6 +1,6 @@
 {
   "name": "community-labeller",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "A GitHub action to label issues and pull requests with a community label",
   "main": "dist/index.js",
