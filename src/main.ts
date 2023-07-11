@@ -11,21 +11,27 @@ export async function run(): Promise<void> {
     const labelName = core.getInput('label_name', {required: true})
     const labelColor = core.getInput('label_color', {required: true})
     const loginsToIgnore = core.getInput('logins_to_ignore', {required: false})
+    const failIfMember = core.getInput('fail_if_member', {required: false})
     const orgs = getOrgMembershipList()
     const token = core.getInput('token', {required: true})
-
     const client = new GitHubClient(token)
-
-    if (client.hasLabel(labelName)) {
-      core.info(`The '${labelName}' label is already present on this issue! 🙌`)
-      return
-    }
+    const labels = client.getLabels()
+    const missingCommunityLabel = labels && !labels.includes(labelName)
 
     if (
       (await client.checkOrgMembership(orgs)) ||
       client.isExcludedLogin(loginsToIgnore)
     ) {
-      core.info("Looks like this issue doesn't need labeling! 👍")
+      if (failIfMember === 'true' && !labels) {
+        core.setFailed('The PR is missing a label!')
+      } else {
+        core.info("Looks like this issue doesn't need labeling! 👍")
+      }
+      return
+    }
+
+    if (missingCommunityLabel) {
+      core.setFailed('Community PRs must be labelled')
       return
     }
 
