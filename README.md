@@ -58,10 +58,13 @@ This action has been developed with node `v16`.
 npm install
 
 # Run tslint
-npm lint
+npm run lint 
 
 ## Run tests
 npm test
+
+## Run auto fixable lints
+npm run lint -- --fix 
 ```
 
 ## Releasing
