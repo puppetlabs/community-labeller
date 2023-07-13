@@ -17,6 +17,10 @@ inputs:
   logins_to_ignore:
     description: 'Contributions from the specified users will not be labeled by this action. The value can be a single login or a comma-separated list of logins.'
     required: false
+  fail_if_member:
+    description: 'Pipeline will fail, if the user is member of specified organisations and no label has been added manually.'
+    default: 'false'
+    required: false
   token:
     description: 'The GitHub token to use for authentication.'
     required: true

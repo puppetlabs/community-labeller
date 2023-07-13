@@ -88,7 +88,7 @@ export class GitHubClient {
   }
 
   // Checks if the issue already has the label
-  hasLabel(name: string): boolean {
+  getLabels(): string[] | false {
     let labels!: Label[]
 
     if (github.context.eventName === 'issues') {
@@ -103,7 +103,11 @@ export class GitHubClient {
       return false
     }
 
-    return labels.some((l) => l.name === name)
+    if (labels.length > 0) {
+      return labels.map((label) => label.name)
+    }
+
+    return false
   }
 
   /* Adds the label to the issue/pull request. It will attempt to create the label

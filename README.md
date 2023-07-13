@@ -10,6 +10,7 @@ This is a basic action that will label issues and pull request with a given labe
 | label_color | false | The color of the label. If the label already exists in the repository, this setting will have no effect. | 5319E7 |
 | org_membership | false | Contributions from users that are not members of the specified organisations will be labeled with the configured label. The value can be a single organisation or a comma-separated list of organisations. | puppetlabs |
 | logins_to_ignore | false | Contributions from the specified users will not be labeled by this action. The value can be a single login or a comma-separated list of logins. | `N/A` |
+| fail_if_member | false | Pipeline will fail, if the user is member of specified organisations and no label has been added manually. | false |
 | token | true | A token with enough privilege to view org memberships and repo content. | `N/A` |
 
 ## Security

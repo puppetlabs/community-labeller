@@ -160,13 +160,48 @@ describe('With a new github client', () => {
     )
   })
 
-  test('hasLabel returns true if the label already exists on the issue or pr', () => {
-    const result = client.hasLabel('community')
-    expect(result).toBe(true)
+  test('getLabels returns true if the label already exists on the issue or pr', () => {
+    const result = client.getLabels()
+    expect(result).toEqual(['community'])
+  })
+})
+
+describe('With a new github client without label', () => {
+  let client: GitHubClient
+
+  beforeAll(() => {
+    process.env['GITHUB_PATH'] = ''
+
+    Object.defineProperty(github, 'context', {
+      value: {
+        eventName: 'issues',
+        repo: {
+          owner: 'puppetlabs',
+          repo: 'iac'
+        },
+        issue: {
+          number: 331
+        },
+        payload: {
+          action: 'opened',
+          sender: {
+            login: 'dependabot[bot]'
+          },
+          issue: {
+            labels: [
+            ]
+          }
+        }
+      }
+    })
+
+    client = new GitHubClient('1234')
+    console.log('::stop-commands::stoptoken')
+    process.stdout.write = jest.fn()
   })
 
-  test('hasLabel returns false if the label does not exist on the issue or pr', () => {
-    const result = client.hasLabel('test')
+  test('getLabels returns false if the label does not exist on the issue or pr', () => {
+    const result = client.getLabels()
     expect(result).toBe(false)
   })
 })
