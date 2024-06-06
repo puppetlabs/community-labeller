@@ -13,7 +13,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: setup javascript
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 16
     # setup a package lock if one doesn't exist, otherwise do nothing
