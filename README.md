@@ -21,7 +21,8 @@ This action requires a token with `read:org`. The standard GITHUB_TOKEN will not
 
 ### Workflow events
 
-The labeller needs to access the secret associated with the repository. To enable this safely for both internal and external contributors, we reccoment using the `pull_request` event for pull requests.
+The labeller needs to access the secret associated with the repository. To enable this safely for both internal and external contributors, we reccoment using the `pull_request_target` event for labeling pull requests.
+See the [security note on that event](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) before using it for anything else, or combining the labeler action with any other steps.
 
 ## Usage
 
@@ -32,7 +33,7 @@ on:
   issues:
     types:
       - opened
-  pull_request:
+  pull_request_target:
     types:
       - opened
 
