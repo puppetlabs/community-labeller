@@ -2,6 +2,11 @@
 
 This is a basic action that will label issues and pull request with a given label if the contributor is not a member of a given list of organisations.
 
+## Warning
+
+This tool is in the process of being removed and it will be archived in the near future. As such we recommend you do not implement it in any current workflows and,
+if you already have it, to remove as soon as possible. One it this repo is toy-chested, it is unlikely that any workflows containing it will work unless properly amended.
+
 ## Inputs
 
 | name | required | description | default |
